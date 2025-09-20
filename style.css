@@ -229,7 +229,13 @@ p {
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background:url('https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWhzZnd1ZmpweHFlaHprb2kwMXAxajFxZXVlNzRtY3V1aWdnOXgxMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7b8jdNUoFBdcoILjjv/giphy.gif');
+
+  background-size: cover;      /* Make image cover the whole area */
+  background-position: center; /* Keep it centered */
+  background-repeat: no-repeat;
+  min-height: 100vh;           /* Ensure full height */
+  margin: 0;
   color: white;
   padding: 80px 0;
   text-align: center;
