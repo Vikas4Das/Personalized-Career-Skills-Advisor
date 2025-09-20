@@ -417,57 +417,67 @@ themeToggle.addEventListener("click", () => {
     localStorage.setItem("theme", "dark");
   }
 });
-
-// --- Smarter Chatbot ---
+// --- Smarter Chatbot with Career Questions ---
 const chatbotKnowledge = {
   greetings: ["hello", "hi", "hey"],
   farewells: ["bye", "goodbye"],
   thanks: ["thank you", "thanks", "thx"],
-  career_advice: ["advice", "help", "career", "what should i do"],
-  resume: ["resume", "cv", "cover letter"],
-  interview: ["interview", "questions", "prepare", "tips"],
-  data_scientist: ["data scientist", "data science", "machine learning"],
-  ux_designer: ["ux", "ui", "user experience", "designer"],
-  software_engineer: [
-    "software",
-    "developer",
-    "engineer",
-    "coding",
-    "programming",
-  ],
+  career_advice: ["advice", "help", "career"],
 };
 
 const chatbotResponses = {
   greetings:
-    "Hello! I'm your AI Career Mentor. Ask me anything about careers, resumes, or interviews.",
+    "Hiii 👋 I'm your AI Career Mentor! What's your name?",
   farewells: "Goodbye! Best of luck on your career journey.",
   thanks: "You're welcome! I'm happy to help.",
   career_advice:
-    "To give you the best advice, I recommend completing our career assessment. It will help identify your strengths and match you with suitable career paths. Would you like to start?",
-  resume:
-    "A great resume should be concise, tailored to the job, and highlight your achievements. Use action verbs and quantify your results. For example, instead of 'Managed a team,' say 'Led a team of 5 to increase sales by 15% in one quarter.'",
-  interview:
-    "A common interview question is 'Tell me about yourself.' Prepare a 90-second pitch covering your background, key skills, and why you're a good fit for the role. Also, be ready to ask the interviewer insightful questions about the company culture or team.",
-  data_scientist:
-    "A Data Scientist is a great career! It involves using skills in Python, Machine Learning, and Statistics to analyze data. The average salary is high, and the demand is growing rapidly. You can start by learning Python and fundamental statistics.",
-  ux_designer:
-    "UX Designers create user-friendly products. Key skills include user research, wireframing with tools like Figma, and understanding design principles. It's a creative and in-demand field.",
-  software_engineer:
-    "Software Engineering is a broad and rewarding field. Strong problem-solving skills and proficiency in a programming language like Python, Java, or JavaScript are essential. Building projects for a portfolio is a great way to start.",
+    "Let's dive into your career journey! I'll ask a few questions to understand you better.",
   default:
-    "That's a great question. While I can provide general guidance, the best way to get personalized advice is by exploring our platform's resources or completing the career assessment.",
+    "That’s a great question! I can guide you on careers, resumes, and interviews.",
 };
 
+// Stepwise career questions
+const careerQuestions = [
+  // 1️⃣ Personal Background
+  "1️⃣ Personal Background\n• What’s your current education level?\n• Which course/branch/stream are you in?\n• Do you have any work experience or internships? If yes, please describe.",
+  // 2️⃣ Career Goals & Interests
+  "2️⃣ Career Goals & Interests\n• What type of career are you interested in (e.g., software, data science, design, management, research)?\n• Which industries excite you (IT, finance, healthcare, education, gaming, etc.)?\n• Do you prefer working with people, data, machines, or creative tasks?",
+  // 3️⃣ Skills & Strengths
+  "3️⃣ Skills & Strengths\n• List your technical skills (programming, tools, platforms).\n• What soft skills do you have (communication, teamwork)?\n• Which subjects/topics do you enjoy learning the most?",
+  // 4️⃣ Learning Preferences
+  "4️⃣ Learning Preferences\n• How do you prefer to learn (online courses, hands-on projects, books, tutorials)?\n• How much time per week can you dedicate to learning new skills?",
+  // 5️⃣ Achievements & Portfolio
+  "5️⃣ Achievements & Portfolio\n• Have you done any projects, competitions, or certifications?\n• Do you have a GitHub, LinkedIn, or portfolio website?",
+  // 6️⃣ Career Challenges
+  "6️⃣ Career Challenges\n• What challenges are you facing in career planning?\n• Are you preparing for any exams or certifications?",
+  // 7️⃣ Aspirations & Work Style
+  "7️⃣ Aspirations & Work Style\n• Do you want to work in startups, MNCs, government, or as a freelancer?\n• Are you interested in entrepreneurship?",
+  // 8️⃣ Location & Flexibility
+  "8️⃣ Location & Flexibility\n• Which locations/countries are you open to?\n• Are you open to remote or only on-site roles?",
+  // 9️⃣ Timeline & Commitment
+  "9️⃣ Timeline & Commitment\n• When do you plan to start your career?\n• Are you looking for internships, full-time roles, or higher studies?",
+  // 🔟 Feedback & Updates
+  "🔟 Feedback & Updates\n• Do you want periodic career tips or skill-building roadmaps?\n• Would you like notifications for events, hackathons, or job openings?",
+];
+
+let currentStep = 0;
+let userName = "";
+
+// ===== Core Functions =====
 function generateAIResponse(message) {
   const lowerMessage = message.toLowerCase();
-  for (const key in chatbotKnowledge) {
-    if (
-      chatbotKnowledge[key].some((keyword) => lowerMessage.includes(keyword))
-    ) {
-      return chatbotResponses[key];
-    }
+
+  if (!userName) {
+    userName = message;
+    return `Nice to meet you, ${userName}! Let's start your career journey. ${careerQuestions[currentStep]}`;
   }
-  return chatbotResponses.default;
+
+  if (currentStep < careerQuestions.length - 1) {
+    currentStep++;
+    return careerQuestions[currentStep];
+  } else {
+    return `✅ Thanks, ${userName}! I’ve noted all your answers. I’ll use them to guide you with career paths, skills, and opportunities.`;
+  }
 }
 
 function toggleChatbot() {
@@ -484,6 +494,7 @@ function sendChatMessage() {
   if (!message) return;
   addChatMessage(message, "user");
   input.value = "";
+
   setTimeout(() => {
     const response = generateAIResponse(message);
     addChatMessage(response, "bot");
@@ -498,7 +509,11 @@ function addChatMessage(message, sender) {
   messagesContainer.appendChild(messageDiv);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
-// --- End Chatbot ---
+
+// ===== Auto greet on load =====
+window.onload = () => {
+  addChatMessage(chatbotResponses.greetings, "bot");
+};
 
 // Navigation Functions
 function handleGetStartedClick() {
