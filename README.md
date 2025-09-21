@@ -1,3 +1,5 @@
+
+
 <h1 align="center">🤖 Personalized Career & Skills Advisor</h1>
 
 <p align="center">
@@ -56,4 +58,5 @@
 <p>
   This project is licensed under the <strong>MIT License</strong> – free to use and modify.
 </p>
+
 
